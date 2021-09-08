@@ -1,0 +1,25 @@
+
+plugins {
+    id 'application' 
+}
+
+repositories {
+    mavenCentral()
+}
+
+task buildZip(type: Zip) {
+    from compileJava
+    from processResources
+    into('lib') {
+        from configurations.runtimeClasspath
+    }
+}
+
+dependencies {
+    implementation 'com.amazonaws:aws-lambda-java-core:1.2.1'
+}
+
+application {
+    mainClass = 'example.Handler'
+}
+

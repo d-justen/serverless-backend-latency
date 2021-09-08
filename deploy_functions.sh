@@ -42,7 +42,7 @@ if echo $* | grep -e "help\|man\|usage" -q; then
 	exit 0
 fi
 	
-
+## Create packages
 if echo $* | grep -e "create_packages" -q; then
 	echo "Creating packages..."
 	mkdir -p packages
@@ -55,15 +55,9 @@ fi
 MAYBE_FUNCTION_SIZE=`echo $* | grep "function_size" | cut -d "=" -f2`
 FUNCTION_SIZE=${MAYBE_FUNCTION_SIZE:-$DEFAULT_FUNCTION_SIZE}
 
-## Package and deploy nodeJS
+## Deploy packages
 create_lambda nodejs "$NODEJS_VERSION" "index.handler"
-
-## Package and deploy Python
 create_lambda python "$PYTHON_VERSION" "lambda_function.lambda_handler"
-
-## Package and deploy Ruby
 create_lambda ruby "$RUBY_VERSION" "lambda_function.lambda_handler"
-
-## Package and deploy Java
 create_lambda java "$JAVA_VERSION" "example.Hello::handleRequest"
 

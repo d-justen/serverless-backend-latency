@@ -8,6 +8,9 @@ DEFAULT_FUNCTION_SIZE=1024
 FUNCTION_SUFFIX="hello-world"
 POLICY_DOCUMENT=`cat assume-role-policy-document.json`
 
+MAYBE_FUNCTION_SIZE=`echo $* | grep "function_size" | cut -d "=" -f2`
+FUNCTION_SIZE=${MAYBE_FUNCTION_SIZE:-$DEFAULT_FUNCTION_SIZE}
+
 create_lambda() {
 	aws lambda get-function --function-name "$FUNCTION_SIZE-$1-$FUNCTION_SUFFIX" > /dev/null 2>&1
 	if [ $? -eq 0 ]; then
@@ -31,7 +34,6 @@ create_lambda() {
 	fi
 }
 
-
 if echo $* | grep -e "help\|man\|usage" -q; then
 	echo "Usage:"
 	echo "sh ./deploy_functions.sh [function_size=1024] [create_packages]\n"
@@ -51,9 +53,6 @@ if echo $* | grep -e "create_packages" -q; then
 	cd ruby && zip ../packages/ruby.zip lambda_function.rb && cd ..
 	cd java && gradle buildZip && cd .. && cp java/build/distributions/example.zip packages/java.zip
 fi
-
-MAYBE_FUNCTION_SIZE=`echo $* | grep "function_size" | cut -d "=" -f2`
-FUNCTION_SIZE=${MAYBE_FUNCTION_SIZE:-$DEFAULT_FUNCTION_SIZE}
 
 ## Deploy packages
 create_lambda nodejs "$NODEJS_VERSION" "index.handler"

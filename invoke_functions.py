@@ -9,7 +9,7 @@ import time
 
 # TODO: Parse function size from args
 function_size = "1024"
-runtimes = ["nodejs", "python", "ruby", "java"]
+runtimes = ["nodejs", "python", "ruby", "java", "provided"]
 function_suffix = "hello-world"
 
 client = boto3.client('lambda')

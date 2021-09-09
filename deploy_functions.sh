@@ -4,6 +4,7 @@ NODEJS_VERSION="nodejs14.x"
 PYTHON_VERSION="python3.9"
 RUBY_VERSION="ruby2.7"
 JAVA_VERSION="java11"
+PROVIDED_VERSION="provided.al2"
 DEFAULT_FUNCTION_SIZE=1024
 FUNCTION_SUFFIX="hello-world"
 POLICY_DOCUMENT=`cat assume-role-policy-document.json`
@@ -52,6 +53,7 @@ if echo $* | grep -e "create_packages" -q; then
 	cd python && zip ../packages/python.zip lambda_function.py && cd ..
 	cd ruby && zip ../packages/ruby.zip lambda_function.rb && cd ..
 	cd java && gradle buildZip && cd .. && cp java/build/distributions/example.zip packages/java.zip
+	cd provided && zip ../packages/provided.zip bootstrap && cd ..
 fi
 
 ## Deploy packages
@@ -59,4 +61,5 @@ create_lambda nodejs "$NODEJS_VERSION" "index.handler"
 create_lambda python "$PYTHON_VERSION" "lambda_function.lambda_handler"
 create_lambda ruby "$RUBY_VERSION" "lambda_function.lambda_handler"
 create_lambda java "$JAVA_VERSION" "example.Hello::handleRequest"
+create_lambda provided "$PROVIDED_VERSION" "function.handler"
 
